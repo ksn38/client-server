@@ -1,0 +1,30 @@
+version: "3"
+services:
+  server:
+    build: server/
+    volumes:
+      - ./server/:/server/
+    # The command to execute once the image is created.
+    # The following command will execute "python ./server.py".
+    command: python ./server.py
+    networks:
+      - csd
+    # Remember that we defined in'server/server.py' 1234 as port.
+    ports:
+      - 1234:1234
+
+  client:
+    build: client/
+    volumes:
+      - ./client/:/client/
+    command: python ./client.py
+    # The keyword'depends_on' allows you to define whether the service
+    # should wait until other services are ready before launching.
+    depends_on:
+      - server
+    networks:
+      - csd
+      
+networks:
+  csd:
+    driver: bridge
